@@ -1,0 +1,150 @@
+:root{
+  --bg: #0c0f14;
+  --text: #e9edf3;
+  --muted: #acb4c0;
+  --card: rgba(255,255,255,0.06);
+  --glass: rgba(255,255,255,0.08);
+  --primary: #74D2FF;
+  --accent: #FFD66B;
+  --danger: #ff7b7b;
+  --ok: #7bffac;
+}
+
+/* ====== Global ====== */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background: linear-gradient(120deg,#0b1220,#0d182a 50%, #061221);
+  transition: background 0.6s ease;
+}
+.app{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px clamp(16px, 4vw, 32px) 48px;
+}
+
+/* ====== Header ====== */
+.header{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: 18px;
+}
+.brand{
+  display:flex; align-items:center; gap:10px; font-size: clamp(20px, 3.2vw, 28px);
+}
+.brand i{font-size:1.4em;color:var(--primary)}
+.brand span{color:var(--accent)}
+.actions{display:flex; gap:8px}
+.btn{
+  border:0; outline:0; padding:10px 14px; border-radius:12px;
+  font-weight:600; cursor:pointer; transition:.2s transform, .2s filter, .3s background;
+}
+.btn.primary{
+  background: linear-gradient(135deg, #5dbbff, #74D2FF);
+  color:#0b1220; box-shadow: 0 8px 24px rgba(116,210,255,.25);
+}
+.btn.primary:hover{transform: translateY(-1px)}
+.btn.ghost{
+  background: var(--glass); color:var(--text); backdrop-filter: blur(10px);
+}
+.btn.ghost:hover{filter: brightness(1.15)}
+
+/* ====== Search ====== */
+.searchbar{
+  display:flex; align-items:center; gap:10px;
+  padding: 10px 12px; border-radius:14px; background: var(--glass);
+  border:1px solid rgba(255,255,255,0.08);
+  margin-bottom:10px;
+}
+.searchbar i{font-size:22px; color:var(--muted)}
+.searchbar input{
+  flex:1; background: transparent; border:0; outline:0; color:var(--text);
+  font-size:16px;
+}
+.chips{display:flex; flex-wrap:wrap; gap:8px; min-height: 28px}
+.chips .chip{
+  padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.1);
+  cursor:pointer; font-size: 13px; color:var(--muted); transition:.2s;
+}
+.chips .chip:hover{filter:brightness(1.2); transform: translateY(-1px)}
+
+/* ====== Card ====== */
+.card{
+  display:grid; grid-template-columns: 1.1fr 1fr; gap:22px;
+  background: var(--card); border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px; padding:22px; margin-top:14px; position:relative;
+  overflow:hidden; backdrop-filter: blur(8px);
+  animation: floatIn .5s ease;
+}
+@keyframes floatIn{from{opacity:.0; transform: translateY(6px)} to{opacity:1; transform: none}}
+.card::after{ /* subtle glass glare */
+  content:""; position:absolute; inset:-40% -40% auto auto; width:60%; height:60%;
+  background: radial-gradient( circle at top right, rgba(255,255,255,.12), transparent 60%);
+  pointer-events:none;
+}
+.city-row{display:flex; align-items:baseline; gap:10px}
+#cityName{font-size: clamp(22px, 4vw, 36px); margin:0}
+#country{color:var(--muted); font-weight:600}
+.time{color:var(--muted); margin-top:2px}
+
+.temp-row{display:flex; align-items:center; gap:16px; margin-top:14px}
+.icon{width:78px; height:78px; image-rendering: -webkit-optimize-contrast}
+.temps .temp{font-size: clamp(34px, 7vw, 64px); font-weight:800; line-height:1}
+.temps .desc{color:var(--accent); font-weight:700}
+.temps .feels{color:var(--muted); margin-top:4px}
+
+.card__right{display:grid; gap:10px; align-content:flex-start}
+.metric{display:flex; align-items:center; gap:8px; color:var(--text)}
+.metric i{color:var(--primary)}
+
+.progress{margin-top:10px}
+.progress__label{display:flex; justify-content:space-between; color:var(--muted); font-size:13px}
+.progress__bar{
+  height:10px; background: rgba(255,255,255,0.08); border-radius:999px; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.progress__bar span{
+  display:block; height:100%; background: linear-gradient(90deg,#7bffac,#74D2FF);
+  width:0; transition: width .5s ease;
+}
+
+/* ====== Rekomendasi ====== */
+.reco{margin-top:18px}
+.reco h3{margin:0 0 10px 0}
+.reco__list{display:grid; gap:10px; padding-left: 18px}
+.reco__list li{
+  list-style: none; position:relative; padding-left:28px; color:var(--text);
+}
+.reco__list li::before{
+  content:""; position:absolute; left:0; top:8px; width:10px; height:10px; border-radius:50%;
+  background: var(--ok); box-shadow: 0 0 0 4px rgba(123,255,172,.15);
+}
+.reco__list li.warn::before{ background: var(--accent); box-shadow:0 0 0 4px rgba(255,214,107,.15)}
+.reco__list li.danger::before{ background: var(--danger); box-shadow:0 0 0 4px rgba(255,123,123,.15)}
+
+/* ====== Toast ====== */
+.toast{
+  position: fixed; left:50%; transform: translateX(-50%); bottom:24px;
+  background: rgba(12,15,20,.9); color:var(--text);
+  border:1px solid rgba(255,255,255,.1); padding:10px 14px; border-radius:12px;
+  opacity:0; pointer-events:none; transition:.3s; z-index: 20;
+}
+.toast.show{opacity:1; pointer-events:auto; transform: translateX(-50%) translateY(-6px)}
+
+/* ====== Weather Background Themes (auto-applied) ====== */
+body.theme-clear{ background: linear-gradient(120deg,#82c9ff 0%, #a0d8ff 45%, #e6f6ff 100%)}
+body.theme-clouds{ background: linear-gradient(120deg,#8da6bf, #a6b7c7 50%, #cfd8e1)}
+body.theme-rain{ background: linear-gradient(120deg,#314455, #3a556e 50%, #2b3a46)}
+body.theme-thunder{ background: linear-gradient(120deg,#2d3156, #473a6e 50%, #1d203a)}
+body.theme-snow{ background: linear-gradient(120deg,#c9e9ff, #e4f6ff 50%, #ffffff)}
+body.theme-fog{ background: linear-gradient(120deg,#9fa6ad, #b8c0c7 50%, #d9dee3)}
+body.theme-night{ filter: saturate(.9) brightness(.92)}
+
+/* ====== Responsive ====== */
+@media (max-width: 860px){
+  .card{grid-template-columns: 1fr}
+  .actions .btn{padding:8px 10px}
+}

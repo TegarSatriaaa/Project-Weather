@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weather • Tegar Satria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="brand">
+        <i class='bx bx-cloud'></i> Weather<span>Now</span>
+      </h1>
+      <div class="actions">
+        <button id="useLocation" class="btn ghost" title="Gunakan lokasiku">
+          <i class='bx bx-current-location'></i>
+        </button>
+        <button id="toggleUnits" class="btn ghost" title="Toggle °C / °F">
+          °C
+        </button>
+        <button id="clearStorage" class="btn ghost" title="Hapus LocalStorage">
+          <i class='bx bx-trash'></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Search -->
+    <section class="search">
+      <div class="searchbar">
+        <i class='bx bx-search'></i>
+        <input id="cityInput" type="text" placeholder="Cari kota… (mis. Jakarta, Bandung, Tokyo)" autocomplete="off"/>
+        <button id="searchBtn" class="btn primary">Cari</button>
+      </div>
+      <div id="suggestions" class="chips"></div>
+    </section>
+
+    <!-- Card -->
+    <main class="card" id="weatherCard" aria-live="polite">
+      <div class="card__left">
+        <div class="city-row">
+          <h2 id="cityName">—</h2>
+          <span id="country">—</span>
+        </div>
+        <div id="localTime" class="time">—</div>
+
+        <div class="temp-row">
+          <img id="icon" class="icon" alt="ikon cuaca" />
+          <div class="temps">
+            <div class="temp" id="temp">—</div>
+            <div class="desc" id="desc">—</div>
+            <div class="feels" id="feels">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card__right">
+        <div class="metric"><i class='bx bx-wind'></i> Angin: <span id="wind">—</span></div>
+        <div class="metric"><i class='bx bx-water'></i> Kelembapan: <span id="humidity">—</span></div>
+        <div class="metric"><i class='bx bx-sun'></i> Matahari terbit: <span id="sunrise">—</span></div>
+        <div class="metric"><i class='bx bx-moon'></i> Matahari terbenam: <span id="sunset">—</span></div>
+
+        <div class="progress">
+          <div class="progress__label">
+            <span>Perkiraan Kenyamanan</span>
+            <span id="comfortPct">0%</span>
+          </div>
+          <div class="progress__bar"><span id="comfortBar" style="width:0%"></span></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Today Recommendations -->
+    <section class="reco" id="reco">
+      <h3><i class='bx bx-bulb'></i> Rekomendasi Hari Ini</h3>
+      <ul id="recoList" class="reco__list">
+        <!-- diisi JS -->
+      </ul>
+    </section>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <small>Data by OpenWeather • Built by Tegaru</small>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
