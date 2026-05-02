@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skyla Weather ☁️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="weather-default">
+
+  <!-- Animated background canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Floating weather particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="app">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">
+          <span class="brand-emoji" id="brandEmoji">⛅</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Skyla</span>
+          <span class="brand-sub">Weather</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="useLocation" class="action-btn" title="Pakai lokasiku">
+          <i class='bx bx-current-location'></i>
+          <span class="btn-tooltip">Lokasimu</span>
+        </button>
+        <button id="toggleUnits" class="action-btn unit-btn" title="Toggle °C / °F">
+          <span id="unitLabel">°C</span>
+        </button>
+        <button id="toggleTheme" class="action-btn" title="Mode Terang/Gelap">
+          <i class='bx bx-sun' id="themeIcon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== SEARCH ===== -->
+    <section class="search-section">
+      <div class="search-wrap">
+        <div class="search-box">
+          <div class="search-icon"><i class='bx bx-search-alt-2'></i></div>
+          <input
+            id="cityInput"
+            type="text"
+            placeholder="Cari kota… Jakarta, Bandung, Tokyo 🗺️"
+            autocomplete="off"
+          />
+          <button id="searchBtn" class="search-btn">
+            <i class='bx bx-right-arrow-alt'></i>
+          </button>
+        </div>
+        <div id="autocompleteDropdown" class="autocomplete-drop"></div>
+      </div>
+      <div id="recentChips" class="recent-chips"></div>
+    </section>
+
+    <!-- ===== MAIN WEATHER CARD ===== -->
+    <main class="weather-main" id="weatherCard" aria-live="polite">
+
+      <!-- Kiri: Info utama -->
+      <div class="main-left">
+        <div class="location-row">
+          <div class="location-info">
+            <h2 class="city-name" id="cityName">Jakarta</h2>
+            <div class="location-meta">
+              <span class="country-badge" id="countryBadge">ID</span>
+              <span class="local-time" id="localTime">—</span>
+            </div>
+          </div>
+          <button class="fav-btn" id="favBtn" title="Simpan favorit">
+            <i class='bx bx-heart' id="favIcon"></i>
+          </button>
+        </div>
+
+        <div class="temp-display">
+          <div class="weather-icon-wrap">
+            <img id="weatherIcon" class="weather-icon" alt="ikon cuaca" />
+            <div class="icon-glow" id="iconGlow"></div>
+          </div>
+          <div class="temp-info">
+            <div class="temp-big" id="tempBig">—</div>
+            <div class="weather-desc" id="weatherDesc">—</div>
+            <div class="feels-like" id="feelsLike">
+              <i class='bx bx-body'></i> Terasa —
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini stats row -->
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <i class='bx bx-droplet'></i>
+            <span id="humidityVal">—</span>
+            <label>Kelembapan</label>
+          </div>
+          <div class="mini-stat">
+            <i class='bx bx-wind'></i>
+            <span id="windVal">—</span>
+            <label>Angin</label>
+          </div>
+          <div class="mini-stat">
+            <i class='bx bx-show'></i>
+            <span id="visibilityVal">—</span>
+            <label>Jarak Pandang</label>
+          </div>
+          <div class="mini-stat">
+            <i class='bx bx-tachometer'></i>
+            <span id="pressureVal">—</span>
+            <label>Tekanan</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kanan: Detail + comfort -->
+      <div class="main-right">
+
+        <!-- Sun arc -->
+        <div class="sun-arc-card">
+          <div class="sun-arc-label">
+            <span><i class='bx bx-sun'></i> <span id="sunriseVal">—</span></span>
+            <span><i class='bx bx-moon'></i> <span id="sunsetVal">—</span></span>
+          </div>
+          <div class="sun-arc-track">
+            <svg viewBox="0 0 200 100" class="arc-svg">
+              <path d="M 10 95 Q 100 -10 190 95" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round"/>
+              <path id="arcProgress" d="M 10 95 Q 100 -10 190 95" fill="none" stroke="url(#arcGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="230" stroke-dashoffset="230"/>
+              <defs>
+                <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#FFD93D"/>
+                  <stop offset="100%" style="stop-color:#FF914D"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="sun-ball" id="sunBall">☀️</div>
+          </div>
+        </div>
+
+        <!-- Comfort meter -->
+        <div class="comfort-card">
+          <div class="comfort-header">
+            <span class="comfort-title">🌡️ Indeks Kenyamanan</span>
+            <span class="comfort-val" id="comfortVal">—</span>
+          </div>
+          <div class="comfort-track">
+            <div class="comfort-fill" id="comfortFill"></div>
+            <div class="comfort-emoji" id="comfortEmoji">😐</div>
+          </div>
+          <div class="comfort-labels">
+            <span>Tidak Nyaman</span><span>Nyaman Banget</span>
+          </div>
+        </div>
+
+        <!-- UV & AQI -->
+        <div class="extra-cards">
+          <div class="extra-card">
+            <div class="extra-icon">🔆</div>
+            <div class="extra-info">
+              <span class="extra-val" id="uvVal">—</span>
+              <span class="extra-label">Indeks UV</span>
+            </div>
+            <div class="extra-badge" id="uvBadge">—</div>
+          </div>
+          <div class="extra-card">
+            <div class="extra-icon">💧</div>
+            <div class="extra-info">
+              <span class="extra-val" id="dewVal">—</span>
+              <span class="extra-label">Titik Embun</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ===== HOURLY FORECAST ===== -->
+    <section class="hourly-section" id="hourlySection">
+      <div class="section-title-row">
+        <h3 class="section-title">⏰ Prakiraan Per Jam</h3>
+      </div>
+      <div class="hourly-scroll" id="hourlyScroll">
+        <div class="hourly-placeholder">
+          <span>Sedang memuat prakiraan jam…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 5-DAY FORECAST ===== -->
+    <section class="forecast-section" id="forecastSection">
+      <div class="section-title-row">
+        <h3 class="section-title">📅 5 Hari Ke Depan</h3>
+      </div>
+      <div class="forecast-grid" id="forecastGrid">
+        <div class="forecast-placeholder">
+          <span>Sedang memuat prakiraan…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== REKOMENDASI ===== -->
+    <section class="reco-section" id="recoSection">
+      <div class="section-title-row">
+        <h3 class="section-title">💡 Tips Hari Ini</h3>
+      </div>
+      <div class="reco-grid" id="recoGrid"></div>
+    </section>
+
+    <!-- ===== FAVORIT ===== -->
+    <section class="fav-section" id="favSection" style="display:none">
+      <div class="section-title-row">
+        <h3 class="section-title">❤️ Kota Favorit</h3>
+        <button class="clear-fav-btn" id="clearFavBtn">Hapus Semua</button>
+      </div>
+      <div class="fav-chips" id="favChips"></div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <p>☁️ Data oleh <a href="https://openweathermap.org" target="_blank">OpenWeather</a> · Dibuat dengan ❤️ oleh <strong>Tegar Satria</strong></p>
+    </footer>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-card">
+      <div class="loading-spin">
+        <span>🌍</span>
+      </div>
+      <p id="loadingText">Sedang mencari cuaca…</p>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
